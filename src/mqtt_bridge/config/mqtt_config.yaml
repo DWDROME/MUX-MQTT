@@ -1,0 +1,12 @@
+mqtt:
+  broker: "192.168.18.80"
+  port: 1883
+
+  mqtt_pose: "pingpong/turtle1/pose"
+  topic_pose: "/turtle1/pose"
+
+  mqtt_cmd_vel_sub: "pingpong/cmd_vel"
+  topic_cmd_vel: "/remote_cmd_vel"
+
+  mqtt_control_mode: "pingpong/control_mode"  
+  topic_control_mode: "/control_mode"         

@@ -1,0 +1,32 @@
+<launch>
+
+    <!-- 加载 YAML 配置文件 -->
+    <rosparam file="$(find mqtt_bridge)/config/mqtt_config.yaml" command="load"/>
+    
+    <!-- 启动 Turtlesim 模拟器 -->
+    <node pkg="turtlesim" type="turtlesim_node" name="sim" output="screen"/>
+
+    <!-- 启动 MUX 节点：输出到 /cmd_vel，订阅两个输入话题 -->
+    <node pkg="topic_tools" type="mux" name="cmd_vel_mux" args="/cmd_vel /teleop_cmd_vel /remote_cmd_vel" output="screen"/>
+
+    <!-- 启动 twist_mux 节点 -->
+    <node pkg="twist_mux" type="twist_mux" name="twist_mux" output="screen">
+        <rosparam command="load" file="$(find mqtt_bridge)/config/twist_mux.yaml" />
+        <remap from="cmd_vel_out" to="/turtle1/cmd_vel"/>
+    </node>
+
+    <!-- 控制模式切换节点 -->
+    <node pkg="mqtt_bridge" type="control_mode.py" name="control_mode" output="screen"/>
+
+    <!-- 键盘遥操作节点：发布指令到 /teleop_cmd_vel -->
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop" output="screen">
+        <remap from="cmd_vel" to="/teleop_cmd_vel"/>
+    </node>
+
+    <node pkg="mqtt_bridge" type="control_mode_mqtt.py" name="control_mode_mqtt" output="screen"/>
+    <node pkg="mqtt_bridge" type="mqtt_cmd_sub_json.py" name="control_cmd_sub_json" output="screen"/>
+    <node pkg="mqtt_bridge" type="mqtt_pose_1.py" name="mqtt_pose_1" output="screen"/>
+
+
+
+</launch>
