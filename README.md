@@ -22,7 +22,10 @@
 - 强制刹车
 
 ---
-
+## 安装相对应的依赖
+```bash
+rosdep install --from-paths src --ignore-src -r -y
+```
 ## **YAML 配置**
 在 `config/mqtt_config.yaml` 中定义 MQTT 相关参数：
 ```yaml
