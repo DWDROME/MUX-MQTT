@@ -1,39 +1,24 @@
-# locks:
-#   - name    : emergency_lock
-#     topic   : /emergency_lock_trigger
-#     timeout : 0.0
-#     priority: 200
+# twist_mux.yaml
+# 本文件用于配置 twist_mux 的梯级锁定机制以及各控制话题的优先级。
 
-#   - name    : teleop_lock
-#     topic   : /emergency_lock_trigger
-#     timeout : 0.0
-#     priority: 50
+# 锁的配置项，用于对不同控制模块进行梯级管理。
+locks:
+  - name: emergency_lock   # 紧急控制锁，具有最高优先级
+    priority: 100          # 与紧急停止话题保持一致
+    timeout: 0.5           # 锁定超时时间（单位：秒）
+    
+  - name: navigation_lock  # 常规导航锁，次于紧急锁
+    priority: 50           # 与正常控制输出话题对应
+    timeout: 0.5           # 锁定超时时间
 
-# topics:
-#   - name    : emergency_stop
-#     topic   : /emergency_cmd_vel
-#     timeout : 0.5
-#     priority: 250
-
-#   - name    : remote
-#     topic   : /remote_cmd_vel
-#     timeout : 0.5
-#     priority: 80
-
-#   - name    : teleop
-#     topic   : /teleop_cmd_vel
-#     timeout : 0.5
-#     priority: 10
-
-locks: []
-
+# 话题配置项，定义各控制话题及其相关参数。
 topics:
   - name    : emergency_stop
-    topic   : /emergency_cmd_vel
-    timeout : 0.5
-    priority: 100
+    topic   : /emergency_cmd_vel   # 紧急停止话题
+    timeout : 0.5                # 超时时间（单位：秒）
+    priority: 100              # 优先级，与紧急锁匹配
   
   - name    : mux_output
-    topic   : /cmd_vel  # mux 的输出话题
-    timeout : 0.5
-    priority: 50  # 低于紧急停止
+    topic   : /cmd_vel           # twist_mux 的输出话题
+    timeout : 0.5                # 超时时间（单位：秒）
+    priority: 50               # 优先级，低于紧急停止
